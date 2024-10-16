@@ -1,4 +1,4 @@
-/* Ya que en todos los ejercicios menos el 7,8 y 9 van a pedir números, creo una función para poder reciclar código, y así me ahorro trabajo extra,
+/* Ya que en todos los ejercicios menos el 7 y el 8 van a pedir números, creo una función para poder reciclar código, y así me ahorro trabajo extra,
    además hacemos uso del do/while para que hasta que no se introduzca el valor correcto, siga pidiendolo.
 */
 
