@@ -103,7 +103,8 @@ function ejercicio7(){
     ]
 
     let haGanado = true;
-
+    /* en este caso, vamos iterando las preguntas, y si por cada pregunta, coincide la respuesta del usuario (respuestaUsuario) con las respuestas correctas respuestasCorrectas[i], pasaremos
+       a la siguiente pregunta, si completamos las 3 correctamente habremos ganado, si no, mostrará un mensaje de que has perdido. */ 
     for(let i= 0 ; i<preguntas.length;i++){
         let respuestaUsuario = prompt(preguntas[i].toLowerCase());
         if(respuestaUsuario !== respuestasCorrectas[i]){
@@ -146,7 +147,7 @@ function ejercicio9() {
         "leer libros",
         "los videojuegos",
     ];
-
+    // Hacemos uso del random para que el programa nos pida cualquier cosa aleatoria.
     let cosaSeleccionada = cosas[Math.floor(Math.random() * cosas.length)];
 
     let valor = pedirNumero(`Evalúa del 1 al 10 cuánto te gusta ${cosaSeleccionada}:`);
