@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>navigator example</h1>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h1{
+            display: flex;
+            font-size: 40px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-top: 320px;
+        }
+    </style>
+    <script>
+        
+        let idioma = navigator.language;
+        console.log(idioma);
+        let userAgent = navigator.userAgent;
+        console.log(userAgent);  // depende del navegador, saldrá una cosa o otra
+        let hasCookies = navigator.cookieEnabled;
+        console.log(hasCookies);
+        let platform = navigator.platform;
+        console.log(platform);
+        
+    </script>
+</body>
+</html>

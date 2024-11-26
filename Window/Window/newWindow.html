@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="button" value="Abrir ventana" onclick="abrirVentana()">
+    <input type="text" name="text" id="escribir">
+
+    <script>
+        var texto = prompt("Ingresa un título para la nueva ventana:");
+
+        function abrirVentana() {
+            var text = document.getElementById("escribir").value; // Obtener el valor del campo de texto
+            var ventanaNueva = window.open();
+            ventanaNueva.document.write("<h1>" + texto + "</h1>");
+            ventanaNueva.document.write("<p>Había una vez un barquito chiquitito.</p>");
+            ventanaNueva.document.write("<p>" + text + "</p>"); // Mostrar el texto ingresado en el input
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="h1">Document Object Example</h1>
+    <button type="submit" class="btn">hola</button>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h1{
+            display: flex;
+            font-size: 40px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-top: 320px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        // DEPRECADO
+        document.write('<form name="cambiacolor">');
+        document.write('<b>Selecciona un color para el fondo de página:</b><br>');
+        document.write('<select name="color">');
+        document.write('<option value="red">Rojo</option>');
+        document.write('<option value="blue">Azul</option>');
+        document.write('<option value="yellow">Amarillo</option>');
+        document.write('<option value="green">Verde</option>');
+        document.write('</select>');
+        document.write('<input type="button" value="Modifica el color" onclick="document.bgColor=document.cambiacolor.color.value">');
+        document.write('</form>');
+        // --------------------------------------------------------
+        // un listener de cuando se hace click encima de algo, o se marca un texto, en consola , se mostrará a que le estás
+        // dando o marcando
+        document.addEventListener('click', () => {
+            let sel = window.getSelection();
+            console.log(sel.toString()); // Muestra el texto seleccionado en la consola
+        });
+        // usa un listener para click, me cambiará el h1 a Hello World
+        window.addEventListener("click", () =>{
+            document.getElementById("h1").innerHTML = "Hello World ";
+            // ya que estoy creo un nuevo elemento h4 para insertarlo cuando se haga click, al lado del propio h1
+            const nuevo = document.createElement("h4");
+            nuevo.innerHTML = " que tal";
+            document.getElementById("h1").appendChild(nuevo);
+        }); 
+
+        window.addEventListener("click",function(){
+            document.getElementById("btn");
+            let color = "grey";
+            document.body.style.backgroundColor = color;
+        })
+
+    </script>
+
+
+</body>
+</html>

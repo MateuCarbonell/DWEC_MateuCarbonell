@@ -3,65 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Conciertos</title>
-    <script src="script.js"></script> <!-- Asegúrate de tener las funciones en un archivo aparte -->
+    <style>
+        /* Estilos del fondo y contenedor principal */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        /* Título principal */
+        h1 {
+            text-align: center;
+            color: #2575fc;
+        }
+
+        /* Estilos del formulario */
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f7f9fc;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        form input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #2575fc;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        form button:hover {
+            background-color: #1a5fb4;
+        }
+
+        /* Estilos para las cartas de concierto */
+        #cartasConciertos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 280px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: #2575fc;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gestión de Conciertos</h1>
-    <form id="formConcierto">
-        <label for="nombreConcierto">Nombre del Concierto:</label>
-        <input type="text" id="nombreConcierto" required>
-        
-        <label for="nombreArtista">Nombre del Artista:</label>
-        <input type="text" id="nombreArtista" required>
+    <div class="container">
+        <h1>Gestión de Conciertos</h1>
 
-        <label for="fechaConcierto">Fecha del Concierto:</label>
-        <input type="date" id="fechaConcierto" required>
+        <!-- Formulario para añadir conciertos -->
+        <form id="formConcierto">
+            <div>
+                <label for="nombreConcierto">Nombre del Concierto:</label>
+                <input type="text" id="nombreConcierto" required>
+            </div>
+            <div>
+                <label for="nombreArtista">Nombre del Artista:</label>
+                <input type="text" id="nombreArtista" required>
+            </div>
+            <div>
+                <label for="fechaConcierto">Fecha del Concierto:</label>
+                <input type="date" id="fechaConcierto" required>
+            </div>
+            <div>
+                <label for="diasAntes">Días de Antelación para Recordatorio:</label>
+                <input type="number" id="diasAntes" required>
+            </div>
+            <div>
+                <label for="precioBase">Precio Base del Ticket:</label>
+                <input type="number" id="precioBase" required>
+            </div>
+            <div>
+                <label for="descuento">Descuento (%):</label>
+                <input type="number" id="descuento" required min="5" max="30">
+            </div>
+            <div>
+                <label for="ticketsVendidos">Tickets Vendidos:</label>
+                <input type="number" id="ticketsVendidos" required>
+            </div>
+            <div>
+                <button type="button" onclick="crearCartaConcierto()">Añadir Concierto</button>
+            </div>
+        </form>
 
-        <label for="diasAntes">Días de Antelación para Recordatorio:</label>
-        <input type="number" id="diasAntes" required>
-
-        <label for="precioBase">Precio Base del Ticket:</label>
-        <input type="number" id="precioBase" required>
-
-        <label for="descuento">Descuento (%):</label>
-        <input type="number" id="descuento" required min="5" max="30">
-
-        <label for="ticketsVendidos">Tickets Vendidos:</label>
-        <input type="number" id="ticketsVendidos" required>
-
-        <button type="button" onclick="mostrarResultados()">Mostrar Resultados</button>
-    </form>
-
-    <div id="resultados">
-        <h2>Resultados del Evento</h2>
-        <p id="recordatorio"></p>
-        <p id="temporada"></p> <!-- Aquí se mostrará la temporada calculada -->
-        <p id="precioConDescuento"></p>
-        <p id="ingresos"></p>
-        <p id="divisionIngresos"></p>
-        <p id="descripcion"></p>
-        <p id="idConcierto"></p>
+        <!-- Contenedor para las cartas de conciertos -->
+        <div id="cartasConciertos">
+            <h2></h2>
+        </div>
     </div>
 
-    <script>
-        function mostrarResultados() {
-            const nombreConcierto = document.getElementById("nombreConcierto").value;
-            const nombreArtista = document.getElementById("nombreArtista").value;
-            const fechaConcierto = document.getElementById("fechaConcierto").value;
-            const diasAntes = parseInt(document.getElementById("diasAntes").value);
-            const precioBase = parseFloat(document.getElementById("precioBase").value);
-            const descuento = parseFloat(document.getElementById("descuento").value);
-            const ticketsVendidos = parseInt(document.getElementById("ticketsVendidos").value);
-
-            // Llamar a las funciones
-            document.getElementById("recordatorio").innerText = "Fecha de recordatorio: " + programarRecordatorio(fechaConcierto, diasAntes);
-            document.getElementById("temporada").innerText = "Temporada del concierto: " + determinarTemporada(fechaConcierto); // Temporada
-            document.getElementById("precioConDescuento").innerText = "Precio con descuento: $" + calcularPrecioDescuento(precioBase, descuento);
-            document.getElementById("ingresos").innerText = "Ingresos esperados: $" + calcularIngresosEsperados(precioBase, ticketsVendidos).toFixed(2);
-            document.getElementById("divisionIngresos").innerText = "Ingresos para el artista: $" + calcularDivisionIngresos(calcularIngresosEsperados(precioBase, ticketsVendidos), 60).toFixed(2);
-            document.getElementById("descripcion").innerText = crearDescripcionEvento(formatearNombreConcierto(nombreConcierto), nombreArtista, fechaConcierto);
-            document.getElementById("idConcierto").innerText = "ID del Concierto: " + generarIDConcierto(fechaConcierto, precioBase);
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorial de Array</title>
+    <script>
+        // Función para calcular el factorial
+        let fact = (n) => {
+            if (n === 0 || n === 1) {
+                return 1;
+            }
+            return n * fact(n - 1);
+        };
+
+        // Función para calcular el factorial de cada número en el array
+        let factorialArray = (arr) => {
+            // Ordenar el array de menor a mayor
+            arr.sort((a, b) => a - b);
+            // Ahora calculamos los factoriales
+            return arr.map(num => fact(num));
+        };
+
+        // Ejemplo de uso
+        let arr = [5, 3, 8, 1, 6, 7, 2, 4, 10, 9]; // Array desordenado
+        let factorials = factorialArray(arr);
+        
+        console.log(factorials); // Muestra los factoriales de cada número del array, pero ordenado
+    </script>
+</head>
+<body>
+</body>
+</html>

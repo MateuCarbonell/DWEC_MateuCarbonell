@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Window Object example</h1>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h1{
+            display: flex;
+            font-size: 40px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-top: 320px;
+        }
+    </style>
+    <script>
+        // setInterval
+        const tiempoTranscurrido = Date.now();
+        const hoy = new Date(tiempoTranscurrido);
+        let interval = setInterval(function() {
+            console.log(hoy);
+        }, 1000); // no para hasta que se lo indiques (clearInterval())
+
+        // setTimeout
+        setTimeout(function(){
+            clearInterval(interval);
+        },5500)
+        
+        timeout = setTimeout(function() {
+            console.log("HOLA!");
+        }, 5600); 
+
+        let altura = screen.availHeight/2;
+        let anchura = screen.availWidth/2;
+        setTimeout(function(){
+            window.open("https://www.marca.com/", "", `width=${anchura},height=${altura}`);
+        },6000);
+        
+
+        
+       
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAREA DWEC UT3</title>
+    <script>
+        function generarDatos() {
+            
+            let contenedor = document.getElementById('resultado'); 
+            contenedor.innerHTML= "<h1>TAREA DWEC UT3 </h1><hr/>"
+            const arr = ["Mateu", "Carbonell Merino", 9, "Septiembre", 2004];
+            let nombreCompletoLength = arr[0].length + arr[1].length; // Longitud de mi nombre completo
+            let nombreCompleto = (arr[0] + " " + arr[1]); // nombre completo en si
+            let buscarLetra = "a";
+            let arraySplit = arr.slice(0, 2); 
+            arraySplit.reverse();
+            let nombreCompletoGirado = (arraySplit[0] + " " + arraySplit[1]);
+
+            let primeraA = nombreCompleto.search(buscarLetra); // Cogemos la primera A
+            let ultimaA = nombreCompletoGirado.search(buscarLetra); // cogemos la ultima A (no ha ido muy bien)
+            let añoActual = new Date().getFullYear(); // cogemos solo el año
+            let miAño = arr[4]; // Cogemos mi año
+            let edad = añoActual - miAño; // mi edad se resta
+
+            contenedor.innerHTML += `Buenos días ${arr[0]} ${arr[1]} <br>
+            Tu nombre completo tiene ${nombreCompletoLength} caracteres. <br>
+            Tu nombre completo todo en mayúsculas es: ${nombreCompleto.toUpperCase()}; <br> 
+            La primera letra A de tu (nombre completo) está en la posición: ${primeraA} <br>
+            Nombre girado: ${nombreCompletoGirado}; <br>
+            La última letra A de tu (nombre completo girado) está en la posición: ${ultimaA} <br>
+            Tu nombre menos las 3 primeras letras es: ${nombreCompleto.slice(3)} <br>
+            Año actual: ${añoActual}; <br>
+            Tu edad es: ${añoActual - miAño}; <br>
+            Raiz cuadrada de mi edad: ${Math.sqrt(edad)}<br>`;
+            
+            
+
+            let btn = document.createElement("button");
+            btn.textContent = "Abrir ventana";
+            contenedor.appendChild(btn);
+            
+
+            btn.addEventListener("click", function() {
+                let ventana = window.open("", "", "width=600,height=400");
+                let frase;
+                if(ventana.navigator.javaEnabled()){
+                    frase = "Java SI disponible en esta ventana"
+                }else{
+                    frase = "Java NO disponible en esta ventana."
+                }
+                ventana.document.write(`
+                <h2>Hola, mi nombre es ${arr[0]}, mi apellido es ${arr[1]} y tengo ${añoActual - miAño} años</h2><br>
+                <p>URL Completa: ${window.location.href}<br>
+                Protocolo utilizado: ${window.location.protocol}<br>
+                Nombre en código del navegador: ${navigator.appCodeName}<br>
+                El número de urls disponibles en el historial es: ${window.history.length} <br>
+                ${frase}<br>
+                
+                
+                </p>
+                `);
+                setTimeout(function(){ // si la ventana existe, a los 5 segundos se cerrará
+                    if(ventana){
+                        ventana.close();
+                    }
+                },5000);
+
+            });
+            
+            
+        }
+    </script>
+</head>
+<body onload="generarDatos()">
+    <div id="resultado"></div>
+</body>
+</html>

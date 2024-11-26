@@ -5,12 +5,19 @@ const filas = 20; // Número de filas del tablero
 const columnas = 10; // Número de columnas del tablero
 const tamCelda = 30; // Tamaño de cada celda en píxeles
 
-let tablero = []; // El tablero del juego
-let piezaActual = null; // La pieza que se está moviendo
-let posicionX = 3; // Posición inicial de la pieza en X
-let posicionY = 0; // Posición inicial de la pieza en Y
+// Variables de juego
+let tablero = [];
+let piezaActual = null;
+let posX = 3; // Posición inicial en X
+let posY = 0; // Posición inicial en Y
+let puntuacion = 0;
 
-// Definición de las piezas con sus formas y colores
+// Control del tiempo
+let tiempoPrevio = 0;
+let intervaloCaida = 500; // Milisegundos entre caídas
+let acumuladorTiempo = 0;
+
+// Definición de piezas
 const piezas = [
     { nombre: "C", forma: [[1, 1, 1], [1, 0, 1]], color: "red" },
     { nombre: "L", forma: [[1, 0, 0], [1, 1, 1]], color: "blue" },
@@ -19,77 +26,77 @@ const piezas = [
     { nombre: "O", forma: [[1, 1], [1, 1]], color: "yellow" }
 ];
 
-// Inicializa el tablero vacío con ceros
+// Inicializar tablero vacío
 function inicializarTablero() {
-    for (let i = 0; i < filas; i++) {
-        tablero[i] = Array(columnas).fill(0); // Llenamos cada fila con ceros
-    }
+    tablero = Array.from({ length: filas }, () => Array(columnas).fill(0));
 }
 
-// Dibuja el tablero con las celdas
+// Dibujar el tablero
 function dibujarTablero() {
     for (let i = 0; i < filas; i++) {
         for (let j = 0; j < columnas; j++) {
             const x = j * tamCelda;
             const y = i * tamCelda;
-            lienzo.fillStyle = tablero[i][j] === 1 ? "gray" : "black"; // Color de las celdas
+            lienzo.fillStyle = tablero[i][j] === 1 ? "gray" : "black";
             lienzo.fillRect(x, y, tamCelda, tamCelda);
-            lienzo.strokeStyle = "white"; // Borde blanco para cada celda
+            lienzo.strokeStyle = "white";
             lienzo.strokeRect(x, y, tamCelda, tamCelda);
         }
     }
 }
 
-// Dibuja la pieza en el tablero
+// Dibujar una pieza
 function dibujarPieza(pieza, x, y) {
-    lienzo.fillStyle = pieza.color; // Color de la pieza
-    for (let fila = 0; fila < pieza.forma.length; fila++) {
-        for (let columna = 0; columna < pieza.forma[fila].length; columna++) {
-            if (pieza.forma[fila][columna] === 1) {
-                const posX = (x + columna) * tamCelda;
-                const posY = (y + fila) * tamCelda;
-                lienzo.fillRect(posX, posY, tamCelda, tamCelda); // Dibujar el bloque
-                lienzo.strokeStyle = "white"; // Borde blanco para la pieza
+    lienzo.fillStyle = pieza.color;
+    pieza.forma.forEach((fila, i) => {
+        fila.forEach((valor, j) => {
+            if (valor === 1) {
+                const posX = (x + j) * tamCelda;
+                const posY = (y + i) * tamCelda;
+                lienzo.fillRect(posX, posY, tamCelda, tamCelda);
+                lienzo.strokeStyle = "white";
                 lienzo.strokeRect(posX, posY, tamCelda, tamCelda);
             }
-        }
-    }
+        });
+    });
 }
 
-// Verifica si la pieza choca con otras o con los bordes
-function chequearColisiones(pieza, x, y) {
-    for (let fila = 0; fila < pieza.forma.length; fila++) {
-        for (let columna = 0; columna < pieza.forma[fila].length; columna++) {
-            if (pieza.forma[fila][columna] === 1) {
-                const tableroX = x + columna;
-                const tableroY = y + fila;
-                // Verifica si está fuera de los límites o si hay una pieza en esa posición
-                if (tableroX < 0 || tableroX >= columnas || tableroY >= filas || (tableroY >= 0 && tablero[tableroY][tableroX] === 1)) {
-                    return true; // Si hay colisión
-                }
-            }
-        }
-    }
-    return false; // No hay colisión
-}
-
-// Coloca la pieza en el tablero
-function posicionaPieza(pieza, x, y) {
-    for (let fila = 0; fila < pieza.forma.length; fila++) {
-        for (let columna = 0; columna < pieza.forma[fila].length; columna++) {
-            if (pieza.forma[fila][columna] === 1) {
-                tablero[y + fila][x + columna] = 1; // Coloca el bloque en el tablero
-            }
-        }
-    }
-}
-
-// Genera una pieza aleatoria
+// Generar una pieza aleatoria
 function generarPieza() {
     return piezas[Math.floor(Math.random() * piezas.length)];
 }
 
-// Elimina las líneas completas del tablero
+// Verificar colisión
+function verificarColision(pieza, x, y) {
+    return pieza.forma.some((fila, i) =>
+        fila.some((valor, j) => {
+            if (valor === 1) {
+                const tableroX = x + j;
+                const tableroY = y + i;
+                return (
+                    tableroX < 0 ||
+                    tableroX >= columnas ||
+                    tableroY >= filas ||
+                    (tableroY >= 0 && tablero[tableroY][tableroX] === 1)
+                );
+            }
+            return false;
+        })
+    );
+}
+
+// Fijar pieza al tablero
+function fijarPieza(pieza, x, y) {
+    pieza.forma.forEach((fila, i) => {
+        fila.forEach((valor, j) => {
+            if (valor === 1) {
+                tablero[y + i][x + j] = 1;
+            }
+        });
+    });
+}
+
+// Limpiar líneas completas
 function eliminarLinea() {
     for (let fila = 0; fila < filas; fila++) {
         if (tablero[fila].every(celda => celda === 1)) {
@@ -99,67 +106,62 @@ function eliminarLinea() {
     }
 }
 
-// Actualiza el estado del juego
-function actualizar() {
-    // Si no hay pieza actual, generamos una nueva
-    if (!piezaActual) {
-        piezaActual = generarPieza();
-        posicionX = 3;
-        posicionY = 0;
-    }
-
-    // Si la pieza no choca, la dejamos bajar
-    if (!chequearColisiones(piezaActual, posicionX, posicionY + 1)) {
-        posicionY++; // Movemos la pieza hacia abajo
+// Mover pieza hacia abajo
+function moverPiezaAbajo() {
+    if (!verificarColision(piezaActual, posX, posY + 1)) {
+        posY++;
     } else {
-        // Si choca, la colocamos en el tablero
-        posicionaPieza(piezaActual, posicionX, posicionY);
-        eliminarLinea(); // Eliminamos líneas completas
-        piezaActual = generarPieza(); // Generamos una nueva pieza
-        posicionX = 3;
-        posicionY = 0;
+        fijarPieza(piezaActual, posX, posY);
+        eliminarLinea();
+        piezaActual = generarPieza();
+        posX = 3;
+        posY = 0;
 
-        // Si la nueva pieza colisiona, es el fin del juego
-        if (chequearColisiones(piezaActual, posicionX, posicionY)) {
-            alert("FIN DE LA PARTIDA");
-            inicializarTablero(); // Reinicia el tablero
-            piezaActual = null; // No hay pieza actual
+        if (verificarColision(piezaActual, posX, posY)) {
+            alert("Juego terminado. Puntuación: " + puntuacion);
+            inicializarTablero();
+            puntuacion = 0;
         }
     }
 }
 
-// Como extra, listener de A D y S
+// Manejar movimiento lateral
 function moverPieza(e) {
-    const tecla = e.key;
-    if (tecla === "a" || tecla === "A") { // Mover izquierda
-        if (!chequearColisiones(piezaActual, posicionX - 1, posicionY)) {
-            posicionX--;
-        }
-    } else if (tecla === "d" || tecla === "D") { // Mover derecha
-        if (!chequearColisiones(piezaActual, posicionX + 1, posicionY)) {
-            posicionX++;
-        }
-    } else if (tecla === "s" || tecla === "S") { // Mover abajo
-        if (!chequearColisiones(piezaActual, posicionX, posicionY + 1)) {
-            posicionY++;
-        }
+    const { key } = e;
+    if (key === "ArrowLeft" && !verificarColision(piezaActual, posX - 1, posY)) {
+        posX--;
+    } else if (key === "ArrowRight" && !verificarColision(piezaActual, posX + 1, posY)) {
+        posX++;
+    } else if (key === "ArrowDown") {
+        moverPiezaAbajo();
     }
 }
 
-// Asegúrate de que el evento de teclas se escucha correctamente
 window.addEventListener("keydown", moverPieza);
 
-// Función principal que actualiza el juego continuamente
-function jugar() {
-    actualizar(); // Actualiza el juego
-    lienzo.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el lienzo
-    dibujarTablero(); // Dibuja el tablero
-    if (piezaActual) {
-        dibujarPieza(piezaActual, posicionX, posicionY); // Dibuja la pieza
-    }
-    setTimeout(jugar,500); // Usar requestAnimationFrame en lugar de setTimeout
+// Dibujar y actualizar el estado del juego
+function renderizarJuego() {
+    lienzo.clearRect(0, 0, canvas.width, canvas.height);
+    dibujarTablero();
+    dibujarPieza(piezaActual, posX, posY);
 }
 
-// Inicial
+// Actualizar estado del juego
+function actualizarJuego(tiempoActual) {
+    const deltaTiempo = tiempoActual - tiempoPrevio;
+    acumuladorTiempo += deltaTiempo;
+
+    if (acumuladorTiempo > intervaloCaida) {
+        moverPiezaAbajo();
+        acumuladorTiempo = 0;
+    }
+
+    renderizarJuego();
+    tiempoPrevio = tiempoActual;
+    requestAnimationFrame(actualizarJuego);
+}
+
+// Inicializar y empezar el juego
 inicializarTablero();
-jugar();
+piezaActual = generarPieza();
+requestAnimationFrame(actualizarJuego);

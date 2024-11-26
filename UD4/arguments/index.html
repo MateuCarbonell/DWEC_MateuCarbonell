@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function suma(x) {
+            var result = 0; 
+            var i;
+            // uso de arguments
+            for (i = 0; i < arguments.length; i++) {
+                result += arguments[i];
+            }
+            return result;
+        }
+        let getTotal = suma(1,4,5,10,20);
+        console.log(getTotal);
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

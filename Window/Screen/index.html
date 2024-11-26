@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Screen example</h1>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h1{
+            display: flex;
+            font-size: 40px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-top: 320px;
+        }
+    </style>
+    <script>
+        let screenHeight = screen.availHeight; // pantalla del navegador
+        console.log(screenHeight);
+        let screenWidth = screen.availWidth;
+        console.log(screenWidth);
+        let colorDepth = screen.colorDepth;
+        console.log(colorDepth);
+        let totalHeight = screen.height; // pantalla entera
+        console.log(totalHeight);
+        let totalWidth = screen.width;
+        console.log(totalWidth);
+
+        
+        
+    </script>
+</body>
+</html>
