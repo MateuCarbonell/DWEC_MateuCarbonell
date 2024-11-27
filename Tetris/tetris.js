@@ -1,4 +1,4 @@
-const canvas = document.getElementById("tetris");
+ const canvas = document.getElementById("tetris");
 const lienzo = canvas.getContext("2d");
 
 const filas = 20; // Número de filas del tablero
@@ -17,6 +17,17 @@ let tiempoPrevio = 0;
 let intervaloCaida = 500; // Milisegundos entre caídas
 let acumuladorTiempo = 0;
 
+// Siguiente pieza
+let siguientePieza = null;
+
+const canvasSiguiente = document.getElementById("siguiente"); // Canvas para la siguiente pieza
+const lienzoSiguiente = canvasSiguiente.getContext("2d");
+
+const filasSiguiente = 4; // Las piezas normalmente tienen un tamaño de 4x4 como máximo
+const columnasSiguiente = 4;
+
+
+
 // Definición de piezas
 const piezas = [
     { nombre: "C", forma: [[1, 1, 1], [1, 0, 1]], color: "red" },
@@ -28,7 +39,13 @@ const piezas = [
 
 // Inicializar tablero vacío
 function inicializarTablero() {
-    tablero = Array.from({ length: filas }, () => Array(columnas).fill(0));
+    tablero = [];
+    for (let i = 0; i < filas; i++) {
+        tablero[i] = [];
+        for (let j = 0; j < columnas; j++) {
+            tablero[i][j] = 0;
+        }
+    }
 }
 
 // Dibujar el tablero
@@ -60,7 +77,22 @@ function dibujarPieza(pieza, x, y) {
         });
     });
 }
+function dibujarSiguientePieza(pieza) {
+    lienzoSiguiente.clearRect(0, 0, canvasSiguiente.width, canvasSiguiente.height); // Limpiar el canvas
+    lienzoSiguiente.fillStyle = pieza.color;
 
+    pieza.forma.forEach((fila, i) => {
+        fila.forEach((valor, j) => {
+            if (valor === 1) {
+                const x = j * tamCelda;
+                const y = i * tamCelda;
+                lienzoSiguiente.fillRect(x, y, tamCelda, tamCelda);
+                lienzoSiguiente.strokeStyle = "white";
+                lienzoSiguiente.strokeRect(x, y, tamCelda, tamCelda);
+            }
+        });
+    });
+}
 // Generar una pieza aleatoria
 function generarPieza() {
     return piezas[Math.floor(Math.random() * piezas.length)];
@@ -102,6 +134,7 @@ function eliminarLinea() {
         if (tablero[fila].every(celda => celda === 1)) {
             tablero.splice(fila, 1); // Elimina la línea completa
             tablero.unshift(Array(columnas).fill(0)); // Añade una nueva fila vacía en la parte superior
+            puntuacion += 100;
         }
     }
 }
@@ -113,12 +146,13 @@ function moverPiezaAbajo() {
     } else {
         fijarPieza(piezaActual, posX, posY);
         eliminarLinea();
-        piezaActual = generarPieza();
+        piezaActual = siguientePieza;  // La siguiente pieza se convierte en la pieza actual
         posX = 3;
         posY = 0;
+        siguientePieza = generarPieza();  // Genera la nueva siguiente pieza
 
         if (verificarColision(piezaActual, posX, posY)) {
-            alert("Juego terminado. Puntuación: " + puntuacion);
+            alert("Juego terminado. Desarrollado por mateu carbonmell");
             inicializarTablero();
             puntuacion = 0;
         }
@@ -128,11 +162,11 @@ function moverPiezaAbajo() {
 // Manejar movimiento lateral
 function moverPieza(e) {
     const { key } = e;
-    if (key === "ArrowLeft" && !verificarColision(piezaActual, posX - 1, posY)) {
+    if ((key === "a" || key === "A")  && !verificarColision(piezaActual, posX - 1, posY)) {
         posX--;
-    } else if (key === "ArrowRight" && !verificarColision(piezaActual, posX + 1, posY)) {
+    } else if ((key === "d" || key === "D") && !verificarColision(piezaActual, posX + 1, posY)) {
         posX++;
-    } else if (key === "ArrowDown") {
+    } else if (key === "s" || key === "S") {
         moverPiezaAbajo();
     }
 }
@@ -144,6 +178,9 @@ function renderizarJuego() {
     lienzo.clearRect(0, 0, canvas.width, canvas.height);
     dibujarTablero();
     dibujarPieza(piezaActual, posX, posY);
+    dibujarSiguientePieza(siguientePieza); // Mostrar la siguiente pieza
+    const marcador = document.getElementById("marcador");
+    marcador.innerHTML = "Puntuación: " + puntuacion;
 }
 
 // Actualizar estado del juego
@@ -164,4 +201,5 @@ function actualizarJuego(tiempoActual) {
 // Inicializar y empezar el juego
 inicializarTablero();
 piezaActual = generarPieza();
+siguientePieza = generarPieza(); // Asignar la primera siguiente pieza
 requestAnimationFrame(actualizarJuego);
